@@ -1,4 +1,12 @@
 /**
+ * @callback TfmPortion
+ * @param {p5.Vector} vector - vector to be transformed
+ * @param {number} ratio - the ratio of the overall transformation to apply
+ * @returns {p5.Vector}
+ */
+
+
+/**
  * Rotates vector around center counter-clockwise by angle radians
  * @param {p5.Vector} vector 
  * @param {number} angle 
@@ -7,65 +15,86 @@
  */
 function rotateAround(vector, angle, center) {
     // rotates coord counter-cloackwise around center by angle
-    let cos_angle = cosine(angle);
-    let sin_angle = sine(angle);
-    let x_new = cos_angle * (vector.x - center.x) + sin_angle * (vector.y - center.y) + center.x;
-    let y_new = -sin_angle * (vector.x - center.x) + cos_angle * (vector.y - center.y) + center.y;
-    return createVector(x_new, y_new);
+    let cosAngle = cosine(angle);
+    let sinAngle = sine(angle);
+    let xNew = cosAngle * (vector.x - center.x) + sinAngle * (vector.y - center.y) + center.x;
+    let yNew = -sinAngle * (vector.x - center.x) + cosAngle * (vector.y - center.y) + center.y;
+    return createVector(xNew, yNew);
 }
+
 
 /**
- * Cosine with some default values to prevent floating point error
  * @param {number} angle 
- * @param {number} epsilon 
- * @returns {number}
+ * @param {p5.Vector} center 
+ * @returns {TfmPortion}
  */
-function cosine(angle, epsilon=0.0001) {
-    let test_angle = 0;
-    for (let i = -1; i < 2; i++) {
-        test_angle = angle + 2 * Math.PI * i;
-        if (Math.abs(test_angle - 0) < epsilon) {
-            return 1;
-        } else if (Math.abs(test_angle - Math.PI / 2) < epsilon) {
-            return 0;
-        } else if (Math.abs(test_angle - Math.PI) < epsilon) {
-            return -1;
-        } else if (Math.abs(test_angle + Math.PI / 2) < epsilon) {
-            return 0;
-        }
+function getRotatePortion(angle, center) {
+    function wrapper(vector, portion) {
+        return rotateAround(vector, angle * portion, center);
     }
-    return Math.cos(angle);
+    return wrapper;
 }
+
 
 /**
- * Sine with some default values to prevent floating point error
- * @param {number} angle 
- * @param {number} epsilon 
- * @returns {number}
+ * Scale vector by scale around center
+ * @param {p5.Vector} vector 
+ * @param {number} scale 
+ * @param {p5.Vector} center 
+ * @returns {p5.Vector}
  */
-function sine(angle, epsilon=0.0001) {
-    let test_angle = 0;
-    for (let i = -1; i < 2; i++) {
-        test_angle = angle + 2 * Math.PI * i;
-        if (Math.abs(test_angle - 0) < epsilon) {
-            return 0;
-        } else if (Math.abs(test_angle - Math.PI / 2) < epsilon) {
-            return 1;
-        } else if (Math.abs(test_angle - Math.PI) < epsilon) {
-            return 0;
-        } else if (Math.abs(test_angle + Math.PI / 2) < epsilon) {
-            return -1;
-        }
+function scaleAround(vector, scale, center) {
+    return vector.copy().sub(center).mult(scale).add(center);
+}
+
+
+/**
+ * @param {number} scale 
+ * @param {p5.Vector} center 
+ * @returns {TfmPortion}
+ */
+function getScalePortion(scale, center) {
+    function wrapper(vector, portion) {
+        return scaleAround(vector, scale * portion + (1 - portion), center);
     }
-    return Math.sin(angle);
+    return wrapper;
 }
 
-function scaleAround(coord, scale, center) {
-    let x_new = (coord[0] - center[0]) * scale + coord[0];
-    let y_new = (coord[1] - center[1]) * scale + coord[1];
-    return [x_new, y_new];
+
+/**
+ * Shift vector by shiftVector
+ * @param {p5.Vector} vector 
+ * @param {p5.Vector} shiftVector 
+ * @returns {p5.Vector}
+ */
+function shift(vector, shiftVector) {
+    return vector.copy().add(shiftVector);
 }
 
-function shiftBy(coord, shift) {
-    return [coord[0] + shift[0], coord[1] + shift[1]];
+
+/**
+ * @param {p5.Vector} shiftVector 
+ * @returns 
+ */
+function getShiftPortion(shiftVector) {
+    function wrapper(vector, portion) {
+        return shift(vector, shiftVector.copy().mult(portion));
+    }
+    return wrapper
+}
+
+
+/**
+ * Apply the given transformation to the points in the curve by the given portion
+ * @param {TfmPortion} tfm 
+ * @param {p5.Vector[]} curve 
+ * @param {number} portion 
+ * @returns {p5.Vector[]}
+ */
+function tfmCurveByRatio(tfm, curve, portion=1) {
+    let new_curve = [];
+    for (let i = 0; i < curve.length; i++) {
+        new_curve.push(tfm(curve[i], portion));
+    }
+    return new_curve;
 }

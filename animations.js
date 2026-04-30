@@ -10,12 +10,17 @@ class AnimateTfm {
         this.numFrames = numFrames;
         this.curves = curves;
         this.startFrame = -1;
+        this.tfms = [];
     }
     setStartFrame(startFrame) {
         this.startFrame = startFrame;
     }
     setCurves(curves) {
         this.curves = curves;
+        this.setTfms();
+    }
+    setTfms() {
+        this.tfms = [];
     }
     elapsedFrame() {
         return frameCount - this.startFrame;
@@ -23,8 +28,21 @@ class AnimateTfm {
     finished() {
         return this.elapsedFrame() == this.numFrames;
     }
-    transformCurves() {
-        return this.curves;
+    getPortion() {
+        return (this.elapsedFrame() + 1) / this.numFrames;
+    }
+    transformCurves(portion) {
+        if (this.tfms.length == 0 || this.tfms.length != this.curves.length) {
+            return this.curves;
+        } else {
+            let newCurves = [];
+            let newCurve;
+            for (let i = 0; i < this.tfms.length; i++){
+                newCurve = tfmCurveByRatio(this.tfms[i], this.curves[i], portion);
+                newCurves.push(newCurve);
+            }
+            return newCurves;
+        }
     }
     /**
      * Draw all the curves in this.curves with the given color and weight
@@ -32,7 +50,7 @@ class AnimateTfm {
      * @param {number} weight 
      */
     draw(color="red", weight=5) {
-        let curves = this.transformCurves();
+        let curves = this.transformCurves(this.getPortion());
         for (let c = 0; c < curves.length; c++) {
             let curve = curves[c];
             for (let i = 0; i < curve.length - 1; i++) {
@@ -49,7 +67,7 @@ class AnimateTfm {
      * @returns {p5.Vector[][]}
      */
     getFinalCurves() {
-        return this.curves;
+        return this.transformCurves(1);
     }
 }
 
@@ -61,49 +79,133 @@ class Pause extends AnimateTfm {
 }
 
 
+/**
+ * Animate the curves rotating around the given center
+ */
 class Rotation extends AnimateTfm {
+    /**
+     * @param {number} numFrames 
+     * @param {number} angle 
+     * @param {p5.Vector} center 
+     * @param {p5.Vector[][]} curves 
+     */
     constructor(
-        num_frames,
+        numFrames,
         angle=Math.PI/2,
-        // center=[CANVAS_SIZE/2, CANVAS_SIZE/2],
-        center=createVector(CANVAS_SIZE/2, CANVAS_SIZE/2),
+        center=null,
         curves=[],
     ) {
-        super(num_frames, curves);
+        super(numFrames, curves);
         this.angle = angle;
-        this.center = center;
+        this.center = center ?? createVector(CANVAS_SIZE / 2, CANVAS_SIZE / 2);
+        this.tfms = [];
     }
-    rotateCurves(angle) {
-        let rotated_curves = [];
-        for (let i = 0; i < this.curves.length; i++) {
-            let new_curve = [];
-            for (let j = 0; j < this.curves[i].length; j++) {
-                let rotated_pt = rotateAround(this.curves[i][j], angle, this.center);
-                new_curve.push(rotated_pt);
-            }
-            rotated_curves.push(new_curve);
-        }
-        return rotated_curves;
+    setTfms() {
+        this.tfms = new Array(this.curves.length).fill(getRotatePortion(this.angle, this.center));
     }
-    transformCurves() {
-        let angle = this.angle * (this.elapsedFrame() + 1) / this.numFrames;
-        return this.rotateCurves(angle);
+}
+
+
+/**
+ * Animate the curves scale with the given center fixed
+ */
+class Scale extends AnimateTfm {
+    /**
+     * @param {number} numFrames 
+     * @param {number} scale 
+     * @param {p5.Vector} center 
+     * @param {p5.Vector[][]} curves 
+     */
+    constructor(
+        numFrames,
+        scale=0.5,
+        center=null,
+        curves=[],
+    ) {
+        super(numFrames, curves);
+        this.scale = scale;
+        this.center = center ?? createVector(CANVAS_SIZE / 2, CANVAS_SIZE / 2);
+        this.tfms = [];
+    }
+    setTfms(scale) {
+        this.tfms = new Array(this.curves.length).fill(getScalePortion(this.scale, this.center));
+    }
+}
+
+/**
+ * Animate shifting the curves by the given shiftVector
+ */
+class Shift extends AnimateTfm {
+    /**
+     * @param {number} numFrames 
+     * @param {p5.Vector} shiftVector 
+     * @param {p5.Vector[][]} curves 
+     */
+    constructor(
+        numFrames,
+        shiftVector,
+        curves=[],
+    ) {
+        super(numFrames, curves);
+        this.tfms = [];
+        this.shiftVector = shiftVector;
+    }
+    setTfms(scale) {
+        this.tfms = new Array(this.curves.length).fill(getShiftPortion(this.shiftVector));
+    }
+}
+
+/**
+ * Duplicate the first curve in curves by numDuplicates.
+ * Should only be used  when there is only a single curve in curves.
+ */
+class Duplicate extends AnimateTfm {
+    /**
+     * @param {number} numFrames 
+     * @param {p5.Vector} numDuplicates 
+     * @param {p5.Vector[][]} curves 
+     */
+    constructor(
+        numFrames=1,
+        numDuplicates=4,
+        curves=[],
+    ) {
+        super(numFrames, curves);
+        this.numDuplicates = numDuplicates;
     }
     getFinalCurves() {
-        return this.rotateCurves(this.angle);
+        return new Array(this.numDuplicates).fill(this.curves[0]);
     }
 }
 
 
-class Scale extends AnimateTfm {
-    constructor(numFrames, center=[], curves=[]) {
+/**
+ * Shift the duplicates to the center of the four quadrants, as required for Hilbert curves
+ */
+class ShiftDuplicatesHilbert extends AnimateTfm {
+    /**
+     * @param {number} numFrames 
+     * @param {p5.Vector[][]} curves 
+     */
+    constructor(
+        numFrames,
+        curves=[],
+    ) {
         super(numFrames, curves);
+        this.shiftVectors = new Array(
+            {length: 4},
+            (_, i) => QUADRANT_CENTERS[i].copy().sub(CANVAS_CENTER)
+        );
+        console.log(this.shiftVectors);
+        console.log(this.shiftVectors[0].x, this.shiftVectors[0].y)
+        this.tfms = [];
+    }
+    setTfms() {
+        this.tfms = new Array(
+            {length: 4},
+            (_, i) => getShiftPortion(this.shiftVectors[i])
+        );
     }
 }
 
 
-class DuplicateShift extends AnimateTfm {
-    constructor(numFrames, curves=[]) {
-        super(numFrames, curves);
-    }
-}
