@@ -4,7 +4,7 @@
  * @param {number} epsilon 
  * @returns {number}
  */
-function cosine(angle, epsilon=0.0001) {
+function cosine(angle, epsilon=1e-5) {
     let test_angle = 0;
     for (let i = -1; i < 2; i++) {
         test_angle = angle + 2 * Math.PI * i;
@@ -27,7 +27,7 @@ function cosine(angle, epsilon=0.0001) {
  * @param {number} epsilon 
  * @returns {number}
  */
-function sine(angle, epsilon=0.0001) {
+function sine(angle, epsilon=1e-5) {
     let test_angle = 0;
     for (let i = -1; i < 2; i++) {
         test_angle = angle + 2 * Math.PI * i;

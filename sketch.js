@@ -1,14 +1,18 @@
 // let quadrantCenters;
 let h0;
+let order;
 
 let animations;
 let animationIndex;
 let currentAnimation;
 
+
+
 function setup() {
     createCanvas(CANVAS_SIZE, CANVAS_SIZE);
+    frameRate(FRAME_RATE);
 
-    CANVAS_CENTER = (CANVAS_SIZE / 2, CANVAS_SIZE / 2);
+    CANVAS_CENTER = createVector(CANVAS_SIZE / 2, CANVAS_SIZE / 2);
     
     QUADRANT_CENTERS = [
         createVector(CANVAS_SIZE * 1 / 4, CANVAS_SIZE * 3 / 4),
@@ -18,16 +22,24 @@ function setup() {
     ];
 
     h0 = Array.from(QUADRANT_CENTERS);
-
-    let shiftVector = createVector(100, 100);
+    order = 6;
 
     animations = [
         new Pause(30),
-        new Scale(30),
-        new Duplicate(1, 4),
-        new ShiftDuplicatesHilbert(30),
-        new Pause(30),
     ];
+
+    for (let i = 0; i < order - 1; i++) {
+        animations = animations.concat([
+            new Scale(FRAME_RATE),
+            new Duplicate(1, 4),
+            new ShiftDuplicatesHilbert(FRAME_RATE),
+            new RotateDuplicatesHilbert(FRAME_RATE),
+            new ConnectHilbert(1),
+            new Pause(FRAME_RATE / 2),
+        ]);
+    }
+
+    animations.push(new Pause(FRAME_RATE * 2));
 
     animationIndex = 0;
     currentAnimation = animations[animationIndex];
@@ -37,7 +49,6 @@ function setup() {
 
 function draw() {
     background(28, 9, 150);
-    frameRate(30);
 
     if (currentAnimation.finished()) {
         prev_final_curves = currentAnimation.getFinalCurves();
@@ -53,8 +64,6 @@ function draw() {
             currentAnimation.setCurves([h0]);
         }
     }
-    // console.log("animationIndex: ", animationIndex);
-    // console.log("animationLength: ", animations.length);
-    console.log("numCurves: ", currentAnimation.curves.length)
+    console.log("animationIndex: ", animationIndex);
     currentAnimation.draw();
 }

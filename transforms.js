@@ -1,9 +1,14 @@
 /**
  * @callback TfmPortion
  * @param {p5.Vector} vector - vector to be transformed
- * @param {number} ratio - the ratio of the overall transformation to apply
+ * @param {number} portion - the portion of the overall transformation to apply
  * @returns {p5.Vector}
  */
+
+
+function doNothing(vector, portion) {
+    return vector;
+}
 
 
 /**
@@ -15,6 +20,9 @@
  */
 function rotateAround(vector, angle, center) {
     // rotates coord counter-cloackwise around center by angle
+    if (Math.abs(angle - 0) < EPS) {
+        return vector;
+    }
     let cosAngle = cosine(angle);
     let sinAngle = sine(angle);
     let xNew = cosAngle * (vector.x - center.x) + sinAngle * (vector.y - center.y) + center.x;
@@ -29,6 +37,9 @@ function rotateAround(vector, angle, center) {
  * @returns {TfmPortion}
  */
 function getRotatePortion(angle, center) {
+    if (Math.abs(angle - 0) < EPS) {
+        return doNothing;
+    }
     function wrapper(vector, portion) {
         return rotateAround(vector, angle * portion, center);
     }
@@ -44,6 +55,9 @@ function getRotatePortion(angle, center) {
  * @returns {p5.Vector}
  */
 function scaleAround(vector, scale, center) {
+    if (Math.abs(scale - 0) < 1e-5) {
+        return vector;
+    }
     return vector.copy().sub(center).mult(scale).add(center);
 }
 
@@ -54,6 +68,9 @@ function scaleAround(vector, scale, center) {
  * @returns {TfmPortion}
  */
 function getScalePortion(scale, center) {
+    if (Math.abs(scale - 1) < EPS) {
+        return doNothing;
+    }
     function wrapper(vector, portion) {
         return scaleAround(vector, scale * portion + (1 - portion), center);
     }

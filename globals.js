@@ -1,3 +1,6 @@
-const CANVAS_SIZE = 400;
+const CANVAS_SIZE = 600;
+const FRAME_RATE = 20;
 let CANVAS_CENTER;
 let QUADRANT_CENTERS;
+
+const EPS = 1e-5;
