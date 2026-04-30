@@ -1,0 +1,1 @@
+const canvas_size = 400;
