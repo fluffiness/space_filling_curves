@@ -1,1 +1,1 @@
-const canvas_size = 400;
+const CANVAS_SIZE = 400;
