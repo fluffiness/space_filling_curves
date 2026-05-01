@@ -79,6 +79,67 @@ function getScalePortion(scale, center) {
 
 
 /**
+ * Scale vector by scale around center
+ * @param {p5.Vector} vector 
+ * @param {number} scale 
+ * @param {p5.Vector} center 
+ * @returns {p5.Vector}
+ */
+function scaleXAround(vector, scale, center) {
+    if (Math.abs(scale - 0) < 1e-5) {
+        return vector;
+    }
+    return vector.copy().sub(center).mult(scale, 1).add(center);
+}
+
+
+/**
+ * @param {number} scale 
+ * @param {p5.Vector} center 
+ * @returns {TfmPortion}
+ */
+function getScaleXPortion(scale, center) {
+    if (Math.abs(scale - 1) < EPS) {
+        return doNothing;
+    }
+    function wrapper(vector, portion) {
+        return scaleXAround(vector, scale * portion + (1 - portion), center);
+    }
+    return wrapper;
+}
+
+
+/**
+ * Scale vector by scale around center
+ * @param {p5.Vector} vector 
+ * @param {number} scale 
+ * @param {p5.Vector} center 
+ * @returns {p5.Vector}
+ */
+function scaleYAround(vector, scale, center) {
+    if (Math.abs(scale - 0) < 1e-5) {
+        return vector;
+    }
+    return vector.copy().sub(center).mult(scale, 1).add(center);
+}
+
+
+/**
+ * @param {number} scale 
+ * @param {p5.Vector} center 
+ * @returns {TfmPortion}
+ */
+function getScaleYPortion(scale, center) {
+    if (Math.abs(scale - 1) < EPS) {
+        return doNothing;
+    }
+    function wrapper(vector, portion) {
+        return scaleYAround(vector, scale * portion + (1 - portion), center);
+    }
+    return wrapper;
+}
+
+/**
  * Shift vector by shiftVector
  * @param {p5.Vector} vector 
  * @param {p5.Vector} shiftVector 
