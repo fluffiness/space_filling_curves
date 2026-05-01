@@ -24,21 +24,24 @@ function setup() {
         createVector(CANVAS_SIZE * (4 / 9), CANVAS_SIZE * 7 / 18),
         createVector(CANVAS_SIZE * (4 / 9 - Math.sqrt(3) / 9), CANVAS_SIZE * 9 / 18),
         createVector(CANVAS_SIZE * (4 / 9 - Math.sqrt(3) / 9), CANVAS_SIZE * 13 / 18),
-    ];    
+    ];
+
+    let scaleCenter = BASE_GOSPER[5].copy().add(createVector(0, 2 * CANVAS_SIZE / 9 * 1 / (Math.sqrt(7) - 1)));
 
     g0 = Array.from(BASE_GOSPER);
-    order = 3;
+    order = 4;
 
     animations = [new Pause(BASE_ANIMATION_FRAMES)];
 
     for (let i = 0; i < order - 1; i++) {
         animations = animations.concat([
             new Rotation(BASE_ANIMATION_FRAMES, GOSPER_ANGLE, BASE_GOSPER[0]),
-            new Scale(BASE_ANIMATION_FRAMES, GOSPER_SCALE, BASE_GOSPER[0]),
+            new Scale(BASE_ANIMATION_FRAMES, GOSPER_SCALE, scaleCenter),
             new Duplicate(1, 7),
             new ShiftDuplicatesGosper(BASE_ANIMATION_FRAMES),
             new RotateDuplicatesGosper(BASE_ANIMATION_FRAMES),
             new ConnectGosper(1),
+            new Pause(BASE_ANIMATION_FRAMES / 2),
         ]);
     }
 
@@ -67,8 +70,6 @@ function draw() {
             currentAnimation.setCurves([g0]);
         }
     }
-    // console.log("animationIndex: ", animationIndex);
-    console.log(currentAnimation.curves[0][7].x);
-    console.log(currentAnimation.curves[0][7].y);
+    drawCurve(BASE_GOSPER, (255, 255, 0, 100), 5);
     currentAnimation.draw();
 }
