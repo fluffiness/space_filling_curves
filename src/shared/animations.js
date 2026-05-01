@@ -49,7 +49,7 @@ class AnimateTfm {
      * @param {string} color 
      * @param {number} weight 
      */
-    draw(color="red", weight=6-animationIndex/FRAME_RATE) {
+    draw(color="red", weight=4) {
         let curves = this.transformCurves(this.getPortion());
         for (let c = 0; c < curves.length; c++) {
             let curve = curves[c];
@@ -175,5 +175,20 @@ class Duplicate extends AnimateTfm {
     }
     getFinalCurves() {
         return new Array(this.numDuplicates).fill(this.curves[0]);
+    }
+}
+
+
+/** 
+ * Flips the curve around the Y axis. That is, flip the x coordinates.
+*/
+class FlipX extends AnimateTfm {
+    /** */
+    constructor(numFrames, center=null, curves=[]) {
+        super(numFrames, curves);
+        this.center = center ?? CANVAS_CENTER;
+    }
+    setTfms() {
+        this.tfms = new Array(this.curves.length).fill(getScaleXPortion(-1, this.center));
     }
 }

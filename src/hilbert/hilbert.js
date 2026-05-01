@@ -24,22 +24,20 @@ function setup() {
     h0 = Array.from(QUADRANT_CENTERS);
     order = 6;
 
-    animations = [
-        new Pause(30),
-    ];
+    animations = [new Pause(BASE_ANIMATION_FRAMES)];
 
     for (let i = 0; i < order - 1; i++) {
         animations = animations.concat([
-            new Scale(FRAME_RATE),
+            new Scale(BASE_ANIMATION_FRAMES, 1/2),
             new Duplicate(1, 4),
-            new ShiftDuplicatesHilbert(FRAME_RATE),
-            new RotateDuplicatesHilbert(FRAME_RATE),
+            new ShiftDuplicatesHilbert(BASE_ANIMATION_FRAMES),
+            new RotateDuplicatesHilbert(BASE_ANIMATION_FRAMES),
             new ConnectHilbert(1),
-            new Pause(FRAME_RATE / 2),
+            new Pause(BASE_ANIMATION_FRAMES / 2),
         ]);
     }
 
-    animations.push(new Pause(FRAME_RATE * 2));
+    animations.push(new Pause(BASE_ANIMATION_FRAMES * 2));
 
     animationIndex = 0;
     currentAnimation = animations[animationIndex];
@@ -64,6 +62,6 @@ function draw() {
             currentAnimation.setCurves([h0]);
         }
     }
-    console.log("animationIndex: ", animationIndex);
+    // console.log("animationIndex: ", animationIndex);
     currentAnimation.draw();
 }

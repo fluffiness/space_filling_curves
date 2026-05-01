@@ -86,10 +86,14 @@ function getScalePortion(scale, center) {
  * @returns {p5.Vector}
  */
 function scaleXAround(vector, scale, center) {
-    if (Math.abs(scale - 0) < 1e-5) {
+    if (Math.abs(scale - 1) < 1e-5) {
         return vector;
     }
-    return vector.copy().sub(center).mult(scale, 1).add(center);
+    let scaleVector = createVector(scale, 1);
+    console.log("    scale in scaleXAround: ", scale);
+    let newVec = vector.copy().sub(center).mult(scaleVector).add(center);
+    console.log("    newVec.x in scaleXAround: ", newVec.x);
+    return vector.copy().sub(center).mult(scaleVector).add(center);
 }
 
 
@@ -117,10 +121,10 @@ function getScaleXPortion(scale, center) {
  * @returns {p5.Vector}
  */
 function scaleYAround(vector, scale, center) {
-    if (Math.abs(scale - 0) < 1e-5) {
+    if (Math.abs(scale - 1) < 1e-5) {
         return vector;
     }
-    return vector.copy().sub(center).mult(scale, 1).add(center);
+    return vector.copy().sub(center).mult(1, scale).add(center);
 }
 
 
@@ -138,6 +142,7 @@ function getScaleYPortion(scale, center) {
     }
     return wrapper;
 }
+
 
 /**
  * Shift vector by shiftVector

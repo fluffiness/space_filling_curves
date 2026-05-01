@@ -36,11 +36,12 @@ class RotateDuplicatesHilbert extends AnimateTfm {
      */
     constructor(
         numFrames,
+        centers=null,
         curves=[],
     ) {
         super(numFrames, curves);
         this.angles = [-Math.PI / 2, 0, 0, Math.PI / 2];
-        this.centers = QUADRANT_CENTERS;
+        this.centers = centers ?? QUADRANT_CENTERS;
         this.tfms = [];
     }
     setTfms() {
