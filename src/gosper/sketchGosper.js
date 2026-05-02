@@ -6,10 +6,14 @@ let animations;
 let animationIndex;
 let currentAnimation;
 
+let weight = 6;
+let totalAnimationLength;
+
 function setup() {
     let canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE);
     canvas.parent("canvas-container");
     frameRate(FRAME_RATE);
+    colorMode(HSL);
 
     CANVAS_CENTER = createVector(CANVAS_SIZE / 2, CANVAS_SIZE / 2);
 
@@ -27,7 +31,7 @@ function setup() {
     let scaleCenter = BASE_GOSPER[5].copy().add(createVector(0, 2 * CANVAS_SIZE / 9 * 1 / (Math.sqrt(7) - 1)));
 
     g0 = Array.from(BASE_GOSPER);
-    order = 5;
+    order = 4;
 
     animations = [new Pause(BASE_ANIMATION_FRAMES)];
 
@@ -45,6 +49,8 @@ function setup() {
 
     animations.push(new Pause(BASE_ANIMATION_FRAMES * 2));
 
+    totalAnimationLength = animations.length;
+
     animationIndex = 0;
     currentAnimation = animations[animationIndex];
     currentAnimation.setStartFrame(0);
@@ -52,7 +58,7 @@ function setup() {
 }
 
 function draw() {
-    background(28, 9, 150);
+    background(225, 80, 30);
 
     if (currentAnimation.finished()) {
         prev_final_curves = currentAnimation.getFinalCurves();
@@ -68,6 +74,7 @@ function draw() {
             currentAnimation.setCurves([g0]);
         }
     }
-    drawCurve(BASE_GOSPER, (255, 255, 0, 100), 5);
-    currentAnimation.draw();
+    let refColor = color('hsla(271, 100%, 50%, 0.4)');
+    drawCurve(BASE_GOSPER, refColor, 5);
+    currentAnimation.draw(weight - animationIndex * 4 / totalAnimationLength);
 }

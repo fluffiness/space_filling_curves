@@ -49,14 +49,16 @@ class AnimateTfm {
      * @param {string} color 
      * @param {number} weight 
      */
-    draw(color="red", weight=4) {
+    draw(weight=4) {
         let curves = this.transformCurves(this.getPortion());
+        let t;
         for (let c = 0; c < curves.length; c++) {
             let curve = curves[c];
             for (let i = 0; i < curve.length - 1; i++) {
                 let start = curve[i];
                 let end = curve[i+1];
-                stroke(color);
+                t = curve.length <= 2 ? 0 : i / (curve.length - 2);
+                stroke(getGradientColor(t));
                 strokeWeight(weight);
                 line(start.x, start.y, end.x, end.y);
             }

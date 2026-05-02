@@ -1,5 +1,5 @@
 const CANVAS_SIZE = 600;
-const FRAME_RATE = 20;
+const FRAME_RATE = 16;
 const BASE_ANIMATION_FRAMES = 20;
 
 let CANVAS_CENTER;

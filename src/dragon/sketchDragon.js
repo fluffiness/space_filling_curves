@@ -1,56 +1,57 @@
 // let quadrantCenters;
-let m0;
+let d0;
 let order;
 
 let animations;
 let animationIndex;
 let currentAnimation;
 
+let weight = 6;
+let totalAnimationLength;
+
 function setup() {
-    createCanvas(CANVAS_SIZE, CANVAS_SIZE);
+    let canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE);
+    canvas.parent("canvas-container");
     frameRate(FRAME_RATE);
+    colorMode(HSL);
 
     CANVAS_CENTER = createVector(CANVAS_SIZE / 2, CANVAS_SIZE / 2);
-    
-    QUADRANT_CENTERS_Z = [
-        createVector(CANVAS_SIZE * 1 / 4, CANVAS_SIZE * 1 / 4),
-        createVector(CANVAS_SIZE * 3 / 4, CANVAS_SIZE * 1 / 4),
-        createVector(CANVAS_SIZE * 1 / 4, CANVAS_SIZE * 3 / 4),
-        createVector(CANVAS_SIZE * 3 / 4, CANVAS_SIZE * 3 / 4),
+
+    BASE_DRAGON = [
+        createVector(CANVAS_SIZE * (5 / 16), CANVAS_SIZE * (3 / 5)),
+        createVector(CANVAS_SIZE * (13 / 16), CANVAS_SIZE * (3 / 5)),
     ];
 
-    m0 = Array.from(QUADRANT_CENTERS_Z);
-    order = 6;
+    d0 = Array.from(BASE_DRAGON);
+    order = 13;
 
-    animations = [
-        new Pause(BASE_ANIMATION_FRAMES),
-    ];
-
-    // animations.push(new FlipX(FRAME_RATE));
+    animations = [new Pause(BASE_ANIMATION_FRAMES)];
 
     for (let i = 0; i < order - 1; i++) {
         animations = animations.concat([
-            new Scale(BASE_ANIMATION_FRAMES, 1/2),
-            new Duplicate(1, 4),
-            new ShiftDuplicatesMorton(BASE_ANIMATION_FRAMES),
-            new ConnectMorton(1),
-            new Pause(BASE_ANIMATION_FRAMES/2),
+            new Scale(BASE_ANIMATION_FRAMES, 1 / Math.sqrt(2), BASE_DRAGON[0]),
+            new Rotation(BASE_ANIMATION_FRAMES, Math.PI / 4, BASE_DRAGON[0]),
+            new Duplicate(1, 2),
+            new RotateDuplicateDragon(BASE_ANIMATION_FRAMES),
+            new ConnectDragon(1),
+            new Pause(BASE_ANIMATION_FRAMES / 2),
         ]);
     }
 
     animations.push(new Pause(BASE_ANIMATION_FRAMES * 2));
 
+    totalAnimationLength = animations.length;
+
     animationIndex = 0;
     currentAnimation = animations[animationIndex];
     currentAnimation.setStartFrame(0);
-    currentAnimation.setCurves([m0]);
+    currentAnimation.setCurves([d0]);
 }
 
 function draw() {
-    background(28, 9, 150);
+    background(225, 80, 30);
 
     if (currentAnimation.finished()) {
-        console.log("currentAnimation.finished()");
         prev_final_curves = currentAnimation.getFinalCurves();
         animationIndex++;
         if (animationIndex < animations.length) {
@@ -61,10 +62,9 @@ function draw() {
             animationIndex = 0;
             currentAnimation = animations[animationIndex];
             animations[0].setStartFrame(frameCount);
-            currentAnimation.setCurves([m0]);
+            currentAnimation.setCurves([d0]);
         }
     }
-    console.log("animationIndex: ", animationIndex);
-    console.log("frameCount: ", frameCount);
-    currentAnimation.draw();
+
+    currentAnimation.draw(weight - animationIndex * 4 / totalAnimationLength);
 }

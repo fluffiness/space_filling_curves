@@ -11,3 +11,8 @@ function drawCurve(curve, color="yellow", weight=4) {
         line(start.x, start.y, end.x, end.y);
     }
 }
+
+
+function getGradientColor(t) {
+    return color(t * 180, 80, 60); // hue 0-360, saturation 80%, lightness 60%
+}
