@@ -6,8 +6,6 @@ let animations;
 let animationIndex;
 let currentAnimation;
 
-
-
 function setup() {
     createCanvas(CANVAS_SIZE, CANVAS_SIZE);
     frameRate(FRAME_RATE);

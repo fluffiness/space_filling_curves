@@ -12,13 +12,13 @@ class ShiftDuplicatesGosper extends AnimateTfm {
     ) {
         super(numFrames, curves);
         this.shiftVectors = [
-            BASE_GOSPER[1].copy().sub(BASE_GOSPER[0]),
-            BASE_GOSPER[1].copy().sub(BASE_GOSPER[0]),
-            BASE_GOSPER[2].copy().sub(BASE_GOSPER[0]),
-            BASE_GOSPER[5].copy().sub(BASE_GOSPER[0]),
-            BASE_GOSPER[5].copy().sub(BASE_GOSPER[0]),
-            BASE_GOSPER[6].copy().sub(BASE_GOSPER[0]),
-            BASE_GOSPER[6].copy().sub(BASE_GOSPER[0]),
+            BASE_GOSPER[1].copy().sub(BASE_GOSPER[5]),
+            BASE_GOSPER[1].copy().sub(BASE_GOSPER[5]),
+            BASE_GOSPER[2].copy().sub(BASE_GOSPER[5]),
+            BASE_GOSPER[5].copy().sub(BASE_GOSPER[5]),
+            BASE_GOSPER[5].copy().sub(BASE_GOSPER[5]),
+            BASE_GOSPER[6].copy().sub(BASE_GOSPER[5]),
+            BASE_GOSPER[6].copy().sub(BASE_GOSPER[5]),
         ];
         this.tfms = [];
     }
@@ -37,6 +37,7 @@ class ShiftDuplicatesGosper extends AnimateTfm {
 class RotateDuplicatesGosper extends AnimateTfm {
     /**
      * @param {number} numFrames 
+     * @param {p5.Vector[]} centers
      * @param {p5.Vector[][]} curves 
      */
     constructor(
@@ -54,7 +55,7 @@ class RotateDuplicatesGosper extends AnimateTfm {
             Math.PI * 2 / 3,
             0,
         ];
-        this.centers = [
+        this.centers = centers ?? [
             BASE_GOSPER[1],
             BASE_GOSPER[1],
             BASE_GOSPER[2],

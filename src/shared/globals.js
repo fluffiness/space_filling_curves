@@ -13,4 +13,6 @@ let BASE_GOSPER;
 let GOSPER_SCALE = 1 / Math.sqrt(7);
 let GOSPER_ANGLE = 0.333473172251832115;
 
+let BASE_DRAGON;
+
 const EPS = 1e-5;

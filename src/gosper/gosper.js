@@ -6,8 +6,6 @@ let animations;
 let animationIndex;
 let currentAnimation;
 
-
-
 function setup() {
     let canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE);
     canvas.parent("canvas-container");
@@ -29,7 +27,7 @@ function setup() {
     let scaleCenter = BASE_GOSPER[5].copy().add(createVector(0, 2 * CANVAS_SIZE / 9 * 1 / (Math.sqrt(7) - 1)));
 
     g0 = Array.from(BASE_GOSPER);
-    order = 4;
+    order = 5;
 
     animations = [new Pause(BASE_ANIMATION_FRAMES)];
 
