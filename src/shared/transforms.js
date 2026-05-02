@@ -90,9 +90,6 @@ function scaleXAround(vector, scale, center) {
         return vector;
     }
     let scaleVector = createVector(scale, 1);
-    console.log("    scale in scaleXAround: ", scale);
-    let newVec = vector.copy().sub(center).mult(scaleVector).add(center);
-    console.log("    newVec.x in scaleXAround: ", newVec.x);
     return vector.copy().sub(center).mult(scaleVector).add(center);
 }
 
@@ -124,7 +121,8 @@ function scaleYAround(vector, scale, center) {
     if (Math.abs(scale - 1) < 1e-5) {
         return vector;
     }
-    return vector.copy().sub(center).mult(1, scale).add(center);
+    let scaleVector = createVector(1, scale);
+    return vector.copy().sub(center).mult(scaleVector).add(center);
 }
 
 
