@@ -8,6 +8,7 @@ let currentAnimation;
 
 let weight = 6;
 let totalAnimationLength;
+let totalFrameCount;
 
 function setup() {
     let canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE);
@@ -31,7 +32,7 @@ function setup() {
     let scaleCenter = BASE_GOSPER[5].copy().add(createVector(0, 2 * CANVAS_SIZE / 9 * 1 / (Math.sqrt(7) - 1)));
 
     g0 = Array.from(BASE_GOSPER);
-    order = 4;
+    order = 5;
 
     animations = [new Pause(BASE_ANIMATION_FRAMES)];
 
@@ -50,6 +51,7 @@ function setup() {
     animations.push(new Pause(BASE_ANIMATION_FRAMES * 2));
 
     totalAnimationLength = animations.length;
+    totalFrameCount = 3 * BASE_ANIMATION_FRAMES + (order - 1) * (4.5 * BASE_ANIMATION_FRAMES + 2);
 
     animationIndex = 0;
     currentAnimation = animations[animationIndex];
@@ -76,5 +78,8 @@ function draw() {
     }
     let refColor = color('hsla(271, 100%, 50%, 0.4)');
     drawCurve(BASE_GOSPER, refColor, 5);
-    currentAnimation.draw(weight - animationIndex * 4 / totalAnimationLength);
+    currentAnimation.draw(weight - animationIndex * 5 / totalAnimationLength);
+    // if (frameCount < totalFrameCount) {
+    //     saveCanvas('frame-' + nf(frameCount, 4), 'png');
+    // }
 }

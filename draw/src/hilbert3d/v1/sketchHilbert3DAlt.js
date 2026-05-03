@@ -8,10 +8,11 @@ let currentAnimation;
 
 let weight = 10;
 let totalAnimationLength;
+let totalFrameCount;
 
 function setup() {
     let canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE, WEBGL);
-    canvas.parent("canvas-container");
+    canvas.parent("canvas-container2");
     frameRate(FRAME_RATE);
     colorMode(HSL);
     
@@ -27,7 +28,7 @@ function setup() {
     ];
 
     h0 = Array.from(OCTANT_CENTERS);
-    order = 3;
+    order = 4;
 
     animations = [new Pause(BASE_ANIMATION_FRAMES)];
 
@@ -36,8 +37,9 @@ function setup() {
             new Scale(BASE_ANIMATION_FRAMES, 1/2),
             new Duplicate(1, 8),
             new ShiftDuplicatesHilbert3D(BASE_ANIMATION_FRAMES),
-            new RotateDuplicatesHilbert3D(BASE_ANIMATION_FRAMES),
-            new ConnectHilbert3D(1),
+            new RotateDuplicatesHilbert3DAltStep1(BASE_ANIMATION_FRAMES),
+            new RotateDuplicatesHilbert3DAltStep2(BASE_ANIMATION_FRAMES),
+            new ConnectHilbert3DAlt(1),
             new Pause(BASE_ANIMATION_FRAMES / 2),
         ]);
     }
@@ -45,6 +47,7 @@ function setup() {
     animations.push(new Pause(BASE_ANIMATION_FRAMES * 2));
 
     totalAnimationLength = animations.length;
+    totalFrameCount = 3 * BASE_ANIMATION_FRAMES + (order - 1) * (4.5 * BASE_ANIMATION_FRAMES + 2);
 
     animationIndex = 0;
     currentAnimation = animations[animationIndex];
@@ -72,5 +75,7 @@ function draw() {
     }
 
     currentAnimation.draw(weight - animationIndex * 2 / totalAnimationLength);
-    // currentAnimation.draw(weight);
+    // if (frameCount < totalFrameCount) {
+    //     saveCanvas('frame-' + nf(frameCount, 4), 'png');
+    // }
 }

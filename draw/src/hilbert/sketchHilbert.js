@@ -8,6 +8,7 @@ let currentAnimation;
 
 let weight = 6;
 let totalAnimationLength;
+let totalFrameCount;
 
 function setup() {
     let canvas = createCanvas(CANVAS_SIZE, CANVAS_SIZE);
@@ -43,6 +44,7 @@ function setup() {
     animations.push(new Pause(BASE_ANIMATION_FRAMES * 2));
 
     totalAnimationLength = animations.length;
+    totalFrameCount = 3 * BASE_ANIMATION_FRAMES + (order - 1) * (3.5 * BASE_ANIMATION_FRAMES + 2);
 
     animationIndex = 0;
     currentAnimation = animations[animationIndex];
@@ -69,4 +71,7 @@ function draw() {
     }
 
     currentAnimation.draw(weight - animationIndex * 4 / totalAnimationLength);
+    // if (frameCount < totalFrameCount) {
+    //     saveCanvas('frame-' + nf(frameCount, 4), 'png');
+    // }
 }
