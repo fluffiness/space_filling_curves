@@ -155,14 +155,78 @@ class RotateDuplicatesHilbert3DAltStep2 extends AnimateTfm3D {
 
 
 /**
+ * Shift the duplicates to the center of the four quadrants, as required for Hilbert curves
+ */
+class ShiftDuplicatesHilbert3DV2 extends AnimateTfm3D {
+    /**
+     * @param {number} numFrames 
+     * @param {p5.Vector[][]} curves 
+     */
+    constructor(
+        numFrames,
+        curves=[],
+    ) {
+        super(numFrames, curves);
+        this.shiftVectors = Array.from(
+            {length: 8},
+            (_, i) => OCTANT_CENTERS_ALT[i].copy()
+        );
+    }
+    setTfms() {
+        this.tfms = Array.from(
+            {length: 8},
+            (_, i) => getShiftPortion(this.shiftVectors[i])
+        );
+    }
+}
+
+
+/**
+ * Rotate the duplicates around the center of the 8 octants, as required for Hilbert curves
+ */
+class RotateDuplicatesHilbert3DV2 extends AnimateTfm3D {
+    /**
+     * @param {number} numFrames 
+     * @param {p5.Vector[][]} curves 
+     */
+    constructor(
+        numFrames,
+        centers=null,
+        curves=[],
+    ) {
+        super(numFrames, curves);
+        this.angles = [
+            Math.PI / 2,
+            0,
+            Math.PI / 2,
+            Math.PI / 2,
+            -Math.PI / 2,
+            -Math.PI / 2,
+            0,
+            -Math.PI / 2,
+        ];
+        this.planes = ["yz", "zx", "zx", "yz", "yz", "yz", "yz", "zx"]
+        this.centers = centers ?? OCTANT_CENTERS_ALT;
+        this.tfms = [];
+    }
+    setTfms() {
+        this.tfms = Array.from(
+            {length: 8},
+            (_, i) => getRotatePlanePortion(this.angles[i], this.centers[i], this.planes[i])
+        );
+    }
+}
+
+
+/**
  * Connect the rotated duplicates, as required for Hilbert curves
  */
-class ConnectHilbert3DAlt extends AnimateTfm3D {
+class ConnectHilbert3DV2 extends AnimateTfm3D {
     constructor(numFrames=1, curves=[]) {
         super(numFrames, curves);
     }
     getFinalCurves() {
-        let reverseIdx = [2, 5];
+        let reverseIdx = [0, 2, 3, 4, 5, 7];
         for (let idxIdx = 0; idxIdx < reverseIdx.length; idxIdx++) {
             this.curves[reverseIdx[idxIdx]].reverse();
         }

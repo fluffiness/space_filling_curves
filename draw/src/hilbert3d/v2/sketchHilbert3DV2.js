@@ -27,10 +27,9 @@ function setup() {
         createVector(-CANVAS_SIZE * 1 / 4,  CANVAS_SIZE * 1 / 4, -CANVAS_SIZE * 1 / 4),
     ];
     
-    OCTANT_CENTERS_ALT2 = [
+    OCTANT_CENTERS_ALT = [
         createVector(-CANVAS_SIZE * 1 / 4,  CANVAS_SIZE * 1 / 4,  CANVAS_SIZE * 1 / 4),
         createVector(-CANVAS_SIZE * 1 / 4, -CANVAS_SIZE * 1 / 4,  CANVAS_SIZE * 1 / 4),
-        createVector(-CANVAS_SIZE * 1 / 4, -CANVAS_SIZE * 1 / 4, -CANVAS_SIZE * 1 / 4),
         createVector(-CANVAS_SIZE * 1 / 4, -CANVAS_SIZE * 1 / 4, -CANVAS_SIZE * 1 / 4),
         createVector( CANVAS_SIZE * 1 / 4, -CANVAS_SIZE * 1 / 4, -CANVAS_SIZE * 1 / 4),
         createVector( CANVAS_SIZE * 1 / 4, -CANVAS_SIZE * 1 / 4,  CANVAS_SIZE * 1 / 4),
@@ -39,7 +38,7 @@ function setup() {
         createVector(-CANVAS_SIZE * 1 / 4,  CANVAS_SIZE * 1 / 4, -CANVAS_SIZE * 1 / 4),
     ];
 
-    h0 = Array.from(OCTANT_CENTERS_ALT2);
+    h0 = Array.from(OCTANT_CENTERS_ALT);
     order = 4;
 
     animations = [new Pause(BASE_ANIMATION_FRAMES)];
@@ -48,9 +47,9 @@ function setup() {
         animations = animations.concat([
             new Scale(BASE_ANIMATION_FRAMES, 1/2),
             new Duplicate(1, 8),
-            new ShiftDuplicatesHilbert3D(BASE_ANIMATION_FRAMES),
-            new RotateDuplicatesHilbert3D(BASE_ANIMATION_FRAMES),
-            new ConnectHilbert3D(1),
+            new ShiftDuplicatesHilbert3DV2(BASE_ANIMATION_FRAMES),
+            new RotateDuplicatesHilbert3DV2(BASE_ANIMATION_FRAMES),
+            new ConnectHilbert3DV2(1),
             new Pause(BASE_ANIMATION_FRAMES / 2),
         ]);
     }
@@ -68,7 +67,7 @@ function setup() {
 
 function draw() {
     background(225, 80, 30);
-    camera(800, -800, 1200);
+    camera(700, -900, 1200);
 
     if (currentAnimation.finished()) {
         prev_final_curves = currentAnimation.getFinalCurves();

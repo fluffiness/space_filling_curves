@@ -28,7 +28,7 @@ function setup() {
     ];
 
     h0 = Array.from(OCTANT_CENTERS);
-    order = 4;
+    order = 3;
 
     animations = [new Pause(BASE_ANIMATION_FRAMES)];
 
