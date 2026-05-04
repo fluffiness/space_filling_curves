@@ -4,6 +4,6 @@ In this project, I aim to visualize some of the most famous examples of space-fi
 
 ![Hilbert curve of order 5](assets/hilbert_curve.gif)
 
-Visit the site to see more.
+Visit the [site](https://fluffiness.github.io/space_filling_curves/) to see more.
 
 
