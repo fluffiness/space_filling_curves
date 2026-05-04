@@ -1,25 +1,9 @@
-# space_filling_curves
+# Visualization of Space-Filling Curves
 
-## Getting Started
+A [Space filling curves](https://en.wikipedia.org/wiki/Space-filling_curve) is a curve whose range reaches every point in a higher dimensional region. In other words, a space filling curve is a continuous surjection $f: [0, 1] \to S$ where $S$ is an $n$-dimensional subset of $\mathbb{R}^{n}$ for some integer $n \geq 2$ with positive $n$-dimensional Lebesgue measure. Having a positive Lebesgue measure just means that it "takes up space" in $\mathbb{R}^{n}$, and is not like, say, a straight line in $\mathbb{R}^{2}$ or a smooth surface in $\mathbb{R}^{3}$.
 
-Open `index.html` in your web browser and start editing `sketch.js`.
+The image below is the Hilbert curve of order 5. Note that, as is evident from the image, this is not actually a space-filling curve. The actual Hilbert curve is what we get if we take the order to tend towards infinity.
 
-## Running Locally
+![Hilbert Curve](assets/hilbert_order5.png)
 
-For projects with media files, use a local server:
-
-```bash
-# Using Python
-python -m http.server 8000
-
-# Using Node.js
-npx http-server
-
-# Using VS Code Live Server extension
-# Right-click index.html -> "Open with Live Server"
-```
-
-## Resources
-
-- [p5.js 2.0](https://beta.p5js.org/)
-- [p5.js Reference](https://p5js.org/reference/)
+In this project, I aim to visualize some of the most famous examples of space-filling curves. I want to showcase how these curves grow in order recursively and highlight their self-similarity.
