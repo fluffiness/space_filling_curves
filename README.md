@@ -6,4 +6,6 @@ In this project, I aim to visualize some of the most famous examples of space-fi
 
 Visit the [site](https://fluffiness.github.io/space_filling_curves/) to see more.
 
+The GIFs are generated using p5.js. The draw folder contains all the scripts used to generate the animations.
+
 

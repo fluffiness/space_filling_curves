@@ -12,7 +12,7 @@ Both of these recursive processes produce space-filling curves. You can also mix
 
 Another possibility is to start with a different base case. This produces yet another different space-filling curve that is in the same family.
 
-![Hilbert curve 3D v1](../assets/hilbert_curve_3d_v2.gif)
+![Hilbert curve 3D v2](../assets/hilbert_curve_3d_v2.gif)
 
 ## 3D Z-order curve
 
